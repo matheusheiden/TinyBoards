@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<blocks>
+	<default>
+		<addCss>teste.css</addCss>
+		<addJs>https://code.jquery.com/jquery-2.1.4.min.js</addJs>
+		<addJs>teste.js</addJs>
+		<setLayout>default.phtml</setLayout>
+	</default>
+	<index>
+		<setLayout>index.phtml</setLayout>
+	</index>
+	<post>
+		<setLayout>post.phtml</setLayout>
+	</post>
+	<board>
+		<setLayout>board.phtml</setLayout>
+	</board>
+</blocks>

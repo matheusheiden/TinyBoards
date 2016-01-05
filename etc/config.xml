@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <database>
+        <user>root</user>
+        <password/>
+        <host>localhost</host>
+        <db>boards</db>
+    </database>
+</config>

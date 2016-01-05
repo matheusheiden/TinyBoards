@@ -1,0 +1,11 @@
+
+<div class="container">
+<?php 
+	$boards = $this->getBoards();
+	foreach ($boards as $key ) {
+		?>
+		<h1><?php echo $key->getData('desc') ?></h1>
+		<?php
+	}
+?>
+</div>

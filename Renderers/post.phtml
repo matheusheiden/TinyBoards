@@ -1,0 +1,22 @@
+
+<?php $post = $this->getPost(); ?>
+<div class="post">
+	<div class="content" id="content_<?php echo $post->getId() ?>">
+		<div class="header">
+			<strong>Date:</strong>
+			<?php echo $post->getDate() ?>
+			<strong>Name:</strong>
+			<?php echo $post->getName() ?>
+			<strong>Subject:</strong>
+			<?php echo $post->getSubject() ?>
+			<strong>ID:</strong>
+			<?php echo $post->getID() ?>
+		</div>
+		<div class="text">
+			<?php echo $post->getContent() ?>
+		</div>
+	</div>
+	<div class="img" id="img_<?php echo $post->getId() ?>">
+		<?php echo $this->getImage() ?>
+	</div>
+</div>
