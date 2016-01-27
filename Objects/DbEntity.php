@@ -115,17 +115,11 @@ class DbEntity
 		$data = $this->_dbConn->select($this->_table, $attribute, $value);
 		$class = get_class($this);
 
-		if (count($data) == 1){	
-
-			return new $class($data[0]);
+		$ret = array();
+		foreach ($data as $value){
+			$ret[] = new $class($value);
 		}
-		else {
-			$ret = array();
-			foreach ($data as $value){
-				$ret[] = new $class($value);
-			}
-			return $ret;
-		}
+		return $ret;
 	}
 
     /**

@@ -3,7 +3,7 @@
 	<default>
 		<addCss>teste.css</addCss>
 		<addJs>https://code.jquery.com/jquery-2.1.4.min.js</addJs>
-		<addJs>teste.js</addJs>
+		<addJs>main.js</addJs>
 		<setLayout>default.phtml</setLayout>
 	</default>
 	<index>
@@ -15,4 +15,7 @@
 	<board>
 		<setLayout>board.phtml</setLayout>
 	</board>
+	<boards>
+		<setLayout>boards.phtml</setLayout>
+	</boards>
 </blocks>

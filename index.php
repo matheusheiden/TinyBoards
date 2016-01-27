@@ -13,3 +13,4 @@ TinyBoard::app();
  */
 TinyBoard::controllerStarter();
 
+TinyBoard::log('aauybdhaiusbdiuasbdiuasbdiauhs');

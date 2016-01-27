@@ -14,27 +14,32 @@ class Renderer {
 	protected $_layout = '';
 	private $header = array();
 	private $_config = "etc/layout.xml";
+	private $_isChild = false;
 
 	private $xmlLoader;
 
-	public function __construct(){
+	public function __construct($isChild){
+		$this->_isChild = $isChild;
 		$this->_config = "etc/layout.xml";
 		$this->xmlLoader = new XmlLoader();
 		$this->setConfig();
 	}
 
 	public function setConfig(){
-		try{
+		try {
 			$config = $this->xmlLoader->loadXml($this->_config)->parseXml();
-			//Parse information from default block
-			foreach ($config['default'] as $key => $value) {
-				$this->$key((array)$value);
+			//Parse information from default block if current renderer isn`t a child block
+			if (!$this->_isChild) {
+				foreach ($config['default'] as $key => $value) {
+					$this->$key((array)$value);
+				}
 			}
 			//parse information from the block that is being loaded now
-			foreach ($config[$this->_block] as $key => $value) {
-				$this->$key((array)$value);
-			}
-
+//			if (isset($config[$this->_block])){
+				foreach ($config[$this->_block] as $key => $value) {
+					$this->$key((array)$value);
+				}
+//			}
 			return $this;
 		} catch (\Exception $e) {
 			var_dump($e);
@@ -89,5 +94,9 @@ class Renderer {
 	public function renderHeader()
 	{
 		echo "<head>\n" . implode($this->header, "\n") . "\n" . "</head>\n";
+	}
+
+	public function renderChild() {
+		include($this->_layout);
 	}
 }

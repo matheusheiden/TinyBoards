@@ -48,8 +48,7 @@ class Log
     public function __construct($fileName, $data, $level = 0, $skipCheck = false)
     {
         if ($this->canLog() || $skipCheck) {
-            die("h22ue");
-            $this->createPath()->saveLog($fileName, $this->getLogType($level) . $data);;
+            $this->createPath()->saveLog($fileName, $this->getLogType($level) ." - ".date("Y-m-d H:i:s", time())." - ". $data);;
         }
     }
 
@@ -71,7 +70,7 @@ class Log
     private function saveLog($fileName, $string) : Log
     {
         try {
-            file_put_contents(self::DEFAULT_PATH . $fileName, $string, FILE_APPEND);
+            file_put_contents(self::DEFAULT_PATH . $fileName, $string."\n", FILE_APPEND);
             return $this;
         } catch (\Exception $e) {
             echo $e->getMessage();

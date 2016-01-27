@@ -2,6 +2,8 @@
 namespace TinyBoard;
 
 
+use TinyBoard\Objects\Log;
+
 include("Objects/Renderer.php");
 include("Objects/DbEntity.php");
 include_once("Objects/Board.php");
@@ -83,8 +85,12 @@ include_once("Objects/Log.php");
 			return $_SESSION[$key];
 		}
 
-		public static function getBlock($block){
-			return new $block;
+		/**
+		 * @param $block
+		 * @return \TinyBoard\Objects\Renderer
+		 */
+		public static function getBlock($block, $isChild = false){
+			return new $block($isChild);
 		}
 
 		public static function getUrl($path = null, $get = null, $isSafe = false)
@@ -118,6 +124,10 @@ include_once("Objects/Log.php");
 		public static function getRequest()
 		{
 			return self::$_request;
+		}
+
+		public static function log($content, $flag=Log::DEBUG_FLAG, $filename = "system.log", $skipCheck = false){
+			$log = new Log($filename, $content, $flag, $skipCheck);
 		}
 
 	}

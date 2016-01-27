@@ -9,5 +9,8 @@
                 @TODO: echo cms content
             */ ?>
     </div>
+    <div class="boards-list">
+        <?php  \TinyBoard\TinyBoard::getBlock("\TinyBoard\Blocks\Boards", true)->renderChild(); ?>
+    </div>
 
 </div>

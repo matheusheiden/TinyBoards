@@ -3,16 +3,16 @@ namespace TinyBoard\Blocks;
 
 use TinyBoard\Objects\Renderer as Renderer;
 
-class Blocks_Boards extends Renderer{
+class Boards extends Renderer{
 
 	public $_block = 'boards';
 	
-	public function __construct(){
-		parent::__construct();
+	public function __construct($isChild){
+		parent::__construct($isChild);
 	}
 
 	public function getBoards(){
-		return TinyBoard::getModel('Board')->getCollection();
+		return \TinyBoard\TinyBoard::getModel('\TinyBoard\Objects\Board')->getCollection();
 
 	}
 }

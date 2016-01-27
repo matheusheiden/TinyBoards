@@ -2,9 +2,10 @@
 <div class="container">
 <?php 
 	$boards = $this->getBoards();
+
 	foreach ($boards as $key ) {
 		?>
-		<h1><?php echo $key->getData('desc') ?></h1>
+		<h3><?php echo $key->getData('name')?> - <?php echo $key->getData('description') ?></h3>
 		<?php
 	}
 ?>

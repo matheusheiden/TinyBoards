@@ -44,6 +44,10 @@ class DbConn{
         $this->pdoClient = new \PDO('mysql:host=' . $this->host . ';dbname=' . $this->database, $this->username, $this->password);
 	}
 
+	/**
+	 * Loads Db connection configuration from xml
+	 * @throws \Exception
+	 */
     public function loadConfig()
     {
         $xmlParser = new XmlLoader();
