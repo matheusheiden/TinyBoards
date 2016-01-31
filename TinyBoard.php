@@ -2,23 +2,11 @@
 namespace TinyBoard;
 
 
+use TinyBoard\Controllers\Controller;
 use TinyBoard\Objects\Log;
+use TinyBoard\Objects\TBException;
 
-include("Objects/Renderer.php");
-include("Objects/DbEntity.php");
-include_once("Objects/Board.php");
-include_once("Objects/Image.php");
-include_once("Objects/Post.php");
-include_once("Objects/Config.php");
-include_once("Blocks/Boards.php");
-include_once("Blocks/Index.php");
-include_once("Blocks/Post.php");
-include_once("Blocks/Board.php");
-include_once("Controllers/BoardController.php");
-include_once("Controllers/IndexController.php");
-include_once("Objects/HttpRequest.php");
-include_once("Objects/TBException.php");
-include_once("Objects/Log.php");
+include('./Autoloader.php');
 
 	class TinyBoard{
 
@@ -27,50 +15,77 @@ include_once("Objects/Log.php");
 		 */
 		private static $_request;
 
+		/**
+		 * @var Objects\HttpResponse
+		 */
+		private static $_response;
 
 		//TinyBoard Starter
 		public static function app(){
 			session_start();
-			self::$_request = new Objects\HttpRequest();
+            self::$_request = new Objects\HttpRequest();
+			self::$_response = new Objects\HttpResponse();
+			if (self::isInstalled()){
+				self::getResponse()->redirect(self::getConfig('config/url')."installer.php");
+			}
+
 		}
 
 		public static function controllerStarter()
 		{
-			$path = explode("?", $_SERVER['REQUEST_URI'])[0];
-			$path = explode("/", $path);
-			if (strpos($_SERVER['REQUEST_URI'], 'index.php')){
-				if (isset($path[3])) {
-					if (class_exists('TinyBoard\Controllers\\' . $path[3] . 'Controller')) {
-						$class = 'TinyBoard\Controllers\\' . $path[3] . 'Controller';
-						$controller = new $class();
-						if (isset($path[4])) {
-							$func = $path[4] . 'Action';
-							if (method_exists($controller, $func)) {
-								$controller->$func();
-							} else {
-								self::setHeader($_SERVER["SERVER_PROTOCOL"] . " 404 Not Found");
-							}
-						} else {
-							if (method_exists($controller, 'indexAction')) {
-								$controller->indexAction();
-							} else {
-								self::setHeader($_SERVER["SERVER_PROTOCOL"] . " 404 Not Found");
-							}
+			$_https = self::getConfig('https/enabled');
+			$_currentUrl = self::getRequest()->getRequestUrl($_https);
+			$_uri = self::getRequest()->getUri();
+			$_path = "";
+			$_url = $_https ? self::getConfig('config/safe_url') : self::getConfig('config/url');
+			if ( self::getConfig('url_rewrite/enabled') and strpos($_uri, 'index.php') === false ) {
+				$_path = substr($_currentUrl, strlen($_url), strlen($_currentUrl) );
+			}
+			else {
+				$_currentUrl = rtrim($_currentUrl, "\/");
+				$_url = rtrim($_url, "/");
+				$_url = $_url."/index.php";
+				$_path = substr($_currentUrl, strlen($_url), strlen($_currentUrl) );
+			}
+			if ($_path != false) {
+				$pathToLoad = explode("/", $_path);
+				$pathToLoad = array_values(array_filter($pathToLoad));
+				$class = "TinyBoard\\Controllers\\".ucfirst($pathToLoad[0])."Controller";
+				try {
+					$_controller = new $class();
+					if ( isset($pathToLoad[1]) ) {
+						$method = $pathToLoad[1]."Action";
+						if (method_exists($_controller, $method)){
+							$_controller->$method();
 						}
-					} else {
-						self::setHeader($_SERVER["SERVER_PROTOCOL"] . " 404 Not Found");
+						else {
+							self::getResponse()->set404();
+						}
 					}
-				} else {
-					$controller = new Controllers\IndexController();
-					$controller->indexAction();
-
+					else {
+						if (method_exists($_controller, "indexAction")){
+							$_controller->indexAction();
+						}
+						else {
+							self::getResponse()->set404();
+						}
+					}
 				}
+				catch (\Exception $e){
+					self::log($e);
+					// controller doesn't exist set 404
+					self::getResponse()->set404();
+				}
+			}
+			else {
+				$_controller = new Controllers\IndexController();
+				$_controller->indexAction();
 			}
 		}
 
 		public static function setHeader($value)
 		{
-			header($value);
+			self::getResponse()->setHeader($value);
 		}
 
 		public static function getParams(){
@@ -93,6 +108,12 @@ include_once("Objects/Log.php");
 			return new $block($isChild);
 		}
 
+		/**
+		 * @param null $path
+		 * @param null $get
+		 * @param bool|false $isSafe
+		 * @return string
+		 */
 		public static function getUrl($path = null, $get = null, $isSafe = false)
 		{
 			$url = !$isSafe ? self::getConfig('config/url') : self::getConfig('config/safe_url');
@@ -118,16 +139,41 @@ include_once("Objects/Log.php");
 
 		public static function throwException($msg)
 		{
+
 			throw new Objects\TBException($msg);
 		}
 
+		/**
+		 * @return Objects\HttpRequest
+		 */
 		public static function getRequest()
 		{
 			return self::$_request;
 		}
 
+		/**
+		 * @return Objects\HttpResponse
+		 */
+		public static function getResponse() {
+			return self::$_response;
+		}
+
+		/**
+		 * @param $content
+		 * @param int $flag
+		 * @param string $filename
+		 * @param bool|false $skipCheck
+		 */
 		public static function log($content, $flag=Log::DEBUG_FLAG, $filename = "system.log", $skipCheck = false){
-			$log = new Log($filename, $content, $flag, $skipCheck);
+			new Log($filename, $content, $flag, $skipCheck);
+		}
+
+		/**
+		 * Verifies if TinyBoard db is created
+		 * @return bool
+		 */
+		public static function isInstalled() {
+			return file_exists("etc/local.xml");
 		}
 
 	}

@@ -3,7 +3,6 @@ namespace TinyBoard\Objects;
 
 use TinyBoard\Objects\Utils\XmlLoader as XmlLoader;
 
-include('Utils/XmlLoader.php');
 class Renderer {
 
 	const DOCTYPE_STRING = '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">';

@@ -1,5 +1,7 @@
 <?php
 namespace TinyBoard\Objects\Utils;
+use TinyBoard\TinyBoard;
+
 class DbConn{
     /**
      * The object itself for
@@ -50,12 +52,18 @@ class DbConn{
 	 */
     public function loadConfig()
     {
-        $xmlParser = new XmlLoader();
-        $xml = $xmlParser->loadXml('etc/config.xml')->parseXml();
-        $this->username = $xml['database']['user'];
-        $this->password = empty($xml['database']['password']) ? '' : $xml['database']['password'];
-        $this->database = $xml['database']['db'];
-        $this->host = $xml['database']['host'];
+        if ( file_exists('etc/config.xml') ){
+			$xmlParser = new \TinyBoard\Objects\Utils\XmlLoader();
+			$xml = $xmlParser->loadXml('etc/config.xml')->parseXml();
+			$this->username = $xml['database']['user'];
+			$this->password = empty($xml['database']['password']) ? '' : $xml['database']['password'];
+			$this->database = $xml['database']['db'];
+			$this->host = $xml['database']['host'];
+		}
+		else {
+			TinyBoard::throwException("config.xml doesn't exist, presumably isn`t installed, redirecting to installer");
+		}
+
     }
 
     /**

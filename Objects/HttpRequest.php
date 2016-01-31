@@ -18,27 +18,28 @@ class HttpRequest
 
     /**
      * This attribute clones the array $_FILES
-     * @var
+     * @var array
      */
     private $_files;
 
     /**
      * this attribute clones $_POST
-     * @var
+     * @var array
      */
     private $_post;
 
     /**
      * this attribute clones $_GET
-     * @var
+     * @var array
      */
     private $_get;
 
     /**
      * clones server
-     * @var
+     * @var array
      */
     private $_server;
+
 
     /**
      * HttpRequest constructor.
@@ -89,5 +90,13 @@ class HttpRequest
     public function getPost(): array
     {
         return $this->_post;
+    }
+
+    public function getUri() : \string {
+        return $this->_server['REQUEST_URI'];
+    }
+
+    public function getRequestUrl($isSecure = false) {
+        return !$isSecure ? "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]" : "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
     }
 }

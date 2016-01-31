@@ -22,4 +22,12 @@ class HttpResponse
 
     }
 
+    public function redirect($url){
+        header("Location: $url");
+    }
+
+    public function set404() {
+        $this->setHeader($_SERVER["SERVER_PROTOCOL"] . " 404 Not Found");
+    }
+
 }
