@@ -1,15 +1,17 @@
-<div class="default-container">
-    <div class="logo">LOGO</div>
-    <div class="menu">
-        <strong><a>Teste</a></strong>
+<div class="container-top">
+    <div class ="board-logo">
+        <a href="<?php echo \TinyBoard\TinyBoard::getUrl()?>"><img src="<?php echo \TinyBoard\TinyBoard::getMedia("logo.png")?>"></a>
     </div>
+</div>
 
-    <div class="cms-content">
-        <?php /*
-                @TODO: echo cms content
-            */ ?>
+<div class="content-container">
+
+    <div class="cms-content text-container">
+        <?php
+            echo \TinyBoard\TinyBoard::getModel('\TinyBoard\Objects\CmsBlock')->load("about","key")->getData("data");
+        ?>
     </div>
-    <div class="boards-list">
+    <div class="boards-list text-container">
         <?php  \TinyBoard\TinyBoard::getBlock("\TinyBoard\Blocks\Boards", true)->renderChild(); ?>
     </div>
 

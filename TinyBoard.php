@@ -53,9 +53,11 @@ include('./Autoloader.php');
 				$class = "TinyBoard\\Controllers\\".ucfirst($pathToLoad[0])."Controller";
 				try {
 					$_controller = new $class();
+					self::getRequest()->setCurrentController($pathToLoad[0]);
 					if ( isset($pathToLoad[1]) ) {
 						$method = $pathToLoad[1]."Action";
 						if (method_exists($_controller, $method)){
+							self::getRequest()->setCurrentAction($pathToLoad[1]);
 							$_controller->$method();
 						}
 						else {
@@ -64,6 +66,7 @@ include('./Autoloader.php');
 					}
 					else {
 						if (method_exists($_controller, "indexAction")){
+							self::getRequest()->setCurrentAction("index");
 							$_controller->indexAction();
 						}
 						else {
@@ -78,6 +81,8 @@ include('./Autoloader.php');
 				}
 			}
 			else {
+				self::getRequest()->setCurrentAction("index");
+				self::getRequest()->setCurrentController("index");
 				$_controller = new Controllers\IndexController();
 				$_controller->indexAction();
 			}
@@ -143,6 +148,9 @@ include('./Autoloader.php');
 			throw new Objects\TBException($msg);
 		}
 
+		public static function getMedia($path) {
+			return self::getUrl("media/$path");
+		}
 		/**
 		 * @return Objects\HttpRequest
 		 */

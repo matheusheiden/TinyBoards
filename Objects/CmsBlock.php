@@ -15,5 +15,5 @@ class CmsBlock extends DbEntity
      * Objects data model
      * @var string
      */
-    private $_table = "cms_enity";
+    protected $_table = "cms_entity";
 }

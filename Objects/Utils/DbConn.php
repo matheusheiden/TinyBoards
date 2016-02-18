@@ -1,5 +1,6 @@
 <?php
 namespace TinyBoard\Objects\Utils;
+use TinyBoard\Objects\Utils\DbConn\Query;
 use TinyBoard\TinyBoard;
 
 class DbConn{
@@ -16,7 +17,7 @@ class DbConn{
 	protected $pdoClient;
     /**
      * The query that's going to be executed
-     * @var string
+     * @var Query
      */
 	private $query;
     /**
@@ -44,6 +45,7 @@ class DbConn{
 	private function __construct(){
         $this->loadConfig();
         $this->pdoClient = new \PDO('mysql:host=' . $this->host . ';dbname=' . $this->database, $this->username, $this->password);
+		$this->query = new Query();
 	}
 
 	/**
@@ -78,6 +80,37 @@ class DbConn{
 		return self::$conn;
 	}
 
+	/**
+	 * prepares query to be executed
+	 * @param Query $query
+	 * @return \PDOStatement
+	 */
+	public function prepare(Query $query){
+		return $this->pdoClient->prepare((string)$query);
+	}
+	private function bind(\PDOStatement $statement, $values) {
+		$count = 1;
+		foreach ($values as $value){
+			$statement->bindColumn($count, $value, \PDO::PARAM_STR, strlen($value));
+		}
+		return $statement;
+	}
+
+    /**
+     * Prepares current query and fetches it
+     * @return array
+     */
+    public function prepareAndFetchAll(){
+        $statement = $this->pdoClient->query((string)$this->query);
+        return $statement->fetchAll(\PDO::FETCH_ASSOC);
+    }
+	/**
+	 * @param \PDOStatement $statement
+	 * @return array
+	 */
+	public function execute(\PDOStatement $statement) {
+		return $statement->execute();
+	}
     /**
      * Get table columns
      * @param $table
@@ -85,11 +118,8 @@ class DbConn{
      */
     public function getColumns($table)
     {
-		$this->query = "DESCRIBE ".$table;
-		$sele = $this->pdoClient->query($this->query);
-
-		$rec = $sele->fetchAll(\PDO::FETCH_ASSOC);
-		return $rec;
+		$this->query->describe($table);
+        return $this->prepareAndFetchAll();
 	}
 
     /**
@@ -101,31 +131,13 @@ class DbConn{
      * @throws \Exception
      */
 	public function select($from, $what = null, $where = null){
-		$this->query = "SELECT ";
-		$field = '*';
-		$condition = "";
-		if (is_array($where)){
-			$condition = "WHERE ";
-			foreach($where as $key => $value){
-				$condition .= "`$key` = '$value' AND ";
-			}
-			$condition = rtrim($condition, "AND ");
-		}
-		elseif(!is_null($where)){
-			throw new \Exception("Conditions where need to be an array, example: array(what => value)");
-		}
-		if (!is_null($what)){
-			if (is_array($what)){
-				$field = implode(',', $what);
-			}
-			else{
-				$field = $what;
-			}
-		}
-		$this->query = $this->query . $field . ' FROM ' . $from . ' ' . $condition;
-		$sele = $this->pdoClient->query($this->query);
-		$rec = $sele->fetchAll(\PDO::FETCH_ASSOC);
-		return $rec;
+        $this->query->select($from, $what);
+
+        if (!is_null($where)){
+            $this->query->where($where);
+        }
+
+		return $this->prepareAndFetchAll();
 	}
 
     /**

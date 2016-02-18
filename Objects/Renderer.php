@@ -54,7 +54,7 @@ class Renderer {
 				array_push($this->header, "<script src='" . $script . "'></script>");
 
 			} else {
-				array_push($this->header, "<script src='" . self::DEFAULT_JS_PATH . $script . "'></script>");
+				array_push($this->header, "<script src='" . self::DEFAULT_JS_PATH .\TinyBoard\TinyBoard::getUrl().$script . "'></script>");
 			}
 		}
 		return $this;
@@ -67,7 +67,7 @@ class Renderer {
 				array_push($this->header, "<link rel='stylesheet' type='text/css' href='" . $style . "'>");
 			}
 			else{
-				array_push($this->header, "<link rel='stylesheet' type='text/css' href='".self::DEFAULT_CSS_PATH.$style."'>");
+				array_push($this->header, "<link rel='stylesheet' type='text/css' href='".\TinyBoard\TinyBoard::getUrl().self::DEFAULT_CSS_PATH.$style."'>");
 			}
 		}
 			return $this;

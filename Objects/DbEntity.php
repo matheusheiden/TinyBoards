@@ -7,12 +7,26 @@ include("Utils/DbConn.php");
 
 class DbEntity
 {
-	//entity table
+	/**
+	 * Entity`s table
+	 * @var string
+	 */
 	protected $_table = '';
-	//table attributes
+	/**
+	 * Entity`s Attributes
+	 * @var array
+	 */
 	protected $_attributes = array();
-	//database connection
+	/**
+     * Database connection
+	 * @var DbConn
+	 */
 	protected $_dbConn;
+	/**
+	 * Defines if this object is a new object
+	 * @var bool
+	 */
+	private $_isNew = true;
 	
 	public function __construct(){
 		$this->_dbConn = DbConn::getInstance();
@@ -57,7 +71,11 @@ class DbEntity
     public function save() : DbEntity
 	{
 		$befo = $this->beforeSave();
-		$this->_dbConn->insert($this->_table, $befo['attr'], $befo['values']);
+		if ( $this->_isNew )
+			$this->_dbConn->insert($this->_table, $befo['attr'], $befo['values']);
+		else {
+
+		}
         return $this;
 	}
 
@@ -102,6 +120,7 @@ class DbEntity
 	public function load($id, $attribute = null)
 	{
 		$this->_attributes = $this->_dbConn->select($this->_table, null, array(is_null($attribute) ? 'id' : $attribute => $id))[0];
+		$this->_isNew = false;
 		return $this;
 	}
 

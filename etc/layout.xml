@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <blocks>
 	<default>
-		<addCss>teste.css</addCss>
+		<addCss>styles.css</addCss>
 		<addJs>https://code.jquery.com/jquery-2.1.4.min.js</addJs>
 		<addJs>main.js</addJs>
 		<setLayout>default.phtml</setLayout>

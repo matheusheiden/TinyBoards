@@ -1,12 +1,21 @@
-
-<div class="container">
-<?php 
-	$boards = $this->getBoards();
-
+<?php
+/**
+ * @var \TinyBoard\Blocks\Boards $this
+ */
+?>
+<div class="boards-container">
+<h3>Boards</h3>
+<?php $boards = $this->getBoards(); ?>
+	<ul>
+	<?php
+	/**
+	 * @var \TinyBoard\Objects\Board $key
+	 */
 	foreach ($boards as $key ) {
 		?>
-		<h3><?php echo $key->getData('name')?> - <?php echo $key->getData('description') ?></h3>
+		<li><a href="<?php echo \TinyBoard\TinyBoard::getUrl("board/view")?>"><?php echo $key->getData('description') ?></a></li>
 		<?php
 	}
 ?>
+	</ul>
 </div>

@@ -39,7 +39,16 @@ class HttpRequest
      * @var array
      */
     private $_server;
-
+    /**
+     * Holds current action
+     * @var \string
+     */
+    private $_currentAction;
+    /**
+     * current controller
+     * @var \string
+     */
+    private $_currentController;
 
     /**
      * HttpRequest constructor.
@@ -98,5 +107,17 @@ class HttpRequest
 
     public function getRequestUrl($isSecure = false) {
         return !$isSecure ? "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]" : "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+    }
+
+    public function setCurrentController($controller){
+        $this->_currentController = $controller;
+    }
+
+    public function setCurrentAction($action){
+        $this->_currentAction = $action;
+    }
+
+    public function getCurrentAction (){
+        return $this->_currentAction;
     }
 }
