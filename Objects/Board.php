@@ -2,6 +2,8 @@
 namespace TinyBoard\Objects;
 
 
+use TinyBoard\TinyBoard;
+
 class Board extends DbEntity{
 
 	/**
@@ -14,10 +16,20 @@ class Board extends DbEntity{
 		parent::__construct();
 		if ($data != null){
 			$this->_attributes = $data;
+			$this->_isNew = false;
 		}
 	}
 
 	public function getBoards(){
 		return $this->getCollection();
+	}
+
+	public function getThreads() {
+		/**
+		 * @var Post $collection
+		 */
+		$collection = TinyBoard::getModel('\TinyBoard\Objects\Post');
+		$collection = $collection->getCollection(null, array("isOp"=>1,"board_id"=>$this->getData('id')));
+		return $collection;
 	}
 }

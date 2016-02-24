@@ -54,7 +54,7 @@ class Renderer {
 				array_push($this->header, "<script src='" . $script . "'></script>");
 
 			} else {
-				array_push($this->header, "<script src='" . self::DEFAULT_JS_PATH .\TinyBoard\TinyBoard::getUrl().$script . "'></script>");
+				array_push($this->header, "<script src='" . \TinyBoard\TinyBoard::getUrl().self::DEFAULT_JS_PATH .$script . "'></script>");
 			}
 		}
 		return $this;

@@ -1,8 +1,18 @@
+<?php
+/**
+ * @var TinyBoard\Blocks\Board $this
+ */
+
+
+?>
 <div class"container">
 <div id="title">
-<?php echo $this->getName() ?>
+<h2>/<?php echo $this->getName() ?>/ <span>-</span> <?php echo $this->getDescription() ?></h2>
 </div>
 
 <div class="posts">
-
+    <?php foreach ($this->getThreads() as $thread): ?>
+        <?php \TinyBoard\TinyBoard::getBlock('TinyBoard\Blocks\Post',true)->setPost($thread)->renderChild()?>
+        <div class="clear"></div>
+    <?php endforeach; ?>
 </div>

@@ -27,5 +27,15 @@ class Board extends Renderer {
         return $this->_board->getData('name');
     }
 
+    public function getDescription()
+    {
+        return $this->_board->getData('description');
+    }
+
+
+    public function getThreads() {
+        return $this->_board->getThreads();
+    }
+
 
 }

@@ -9,14 +9,21 @@ class Post extends DbEntity{
 	protected $_table = 'posts';
 
 	public function __construct($data = null){
-		parent::__construct($data);
+		parent::__construct();
+		if ($data != null){
+			$this->_attributes = $data;
+			$this->_isNew = false;
+		}
 	}
 	/*
 	*	TODO: Treat condition when post has more images
 	*/
+	/**
+	 * @return Image
+	 */
 	public function getImage(){
 		$image = TinyBoard::getModel('TinyBoard\Objects\Image')->getImagesFromPost($this);
-		return $image;
+		return reset($image);
 	}
 
 	public function getId(){

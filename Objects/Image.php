@@ -26,8 +26,27 @@ class Image extends DbEntity {
 		$this->setData('name', $filename);
 	}
 
-	private function encodeImage($image) : string
+	private function encodeImage($image) : \string
 	{
 		return base64_encode($image);
 	}
+	public function getResolution(){
+		return getimagesizefromstring(base64_decode($this->getData('image')));
+	}
+
+	/**
+	 * returns image size in bytes
+	 * @return int
+	 */
+	public function getSize() {
+		return $this->formatBytes(strlen(base64_decode($this->getData('image'))));
+	}
+	public function formatBytes($size, $precision = 0) {
+		$base = log($size, 1024);
+		$suffixes = array('', 'KB', 'MB', 'GB', 'TB');
+
+		return round(pow(1024, $base - floor($base)), $precision) .' '. $suffixes[floor($base)];
+	}
+
+
 }

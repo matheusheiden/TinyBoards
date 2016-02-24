@@ -26,7 +26,7 @@ class DbEntity
 	 * Defines if this object is a new object
 	 * @var bool
 	 */
-	private $_isNew = true;
+	protected $_isNew = true;
 	
 	public function __construct(){
 		$this->_dbConn = DbConn::getInstance();
@@ -154,6 +154,10 @@ class DbEntity
 		}
         $this->_attributes[$attribute] = $data;
         return $this;
+	}
+
+	public function isNew(){
+		return $this->_isNew;
 	}
 
 }

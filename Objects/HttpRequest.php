@@ -82,7 +82,7 @@ class HttpRequest
      */
     public function getParams():array
     {
-        return array_merge($this->getGet(), $this->getPost());
+        return array_merge($this->getGet(), $this->getPost(), $this->getUriAsGet());
     }
 
     /**
@@ -113,11 +113,39 @@ class HttpRequest
         $this->_currentController = $controller;
     }
 
+    public function getCurrentController(){
+        return $this->_currentController;
+    }
     public function setCurrentAction($action){
         $this->_currentAction = $action;
     }
 
     public function getCurrentAction (){
         return $this->_currentAction;
+    }
+    public function getUriAsGet() {
+        $_uri = explode("/", $this->getUri());
+        $iterateAt = 0;
+        if ( in_array('index',$_uri) && $this->getCurrentAction() == 'index' ){
+            $iterateAt = array_search('index',$_uri);
+        }
+        elseif(!in_array('index',$_uri) && $this->getCurrentAction() == 'index'){
+            $iterateAt = array_search($this->getCurrentController(),$_uri);
+        }
+        else {
+            $iterateAt = array_search( $this->getCurrentAction(), $_uri);
+        }
+        $return = array();
+        for ($i = $iterateAt+1; $i <= count($_uri); $i=$i+2){
+            $return[$this->trimGet($_uri[$i])] = isset($_uri[$i+1]) ? $this->trimGet($_uri[$i+1]) : null;
+        }
+        return $return;
+    }
+
+    private function trimGet($value) {
+        if (strpos($value, "?") ) {
+            return trim($value, substr($value, strpos($value, '?')));
+        }
+        return $value;
     }
 }

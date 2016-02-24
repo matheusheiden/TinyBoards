@@ -1,22 +1,27 @@
 
-<?php $post = $this->getPost(); ?>
+<?php
+/**
+ * @var TinyBoard\Objects\Post $post
+ * */
+$post = $this->getPost();
+?>
 <div class="post">
-	<div class="content" id="content_<?php echo $post->getId() ?>">
-		<div class="header">
-			<strong>Date:</strong>
-			<?php echo $post->getDate() ?>
-			<strong>Name:</strong>
-			<?php echo $post->getName() ?>
-			<strong>Subject:</strong>
-			<?php echo $post->getSubject() ?>
-			<strong>ID:</strong>
-			<?php echo $post->getID() ?>
+	<?php $imageData = $post->getImage()->getResolution() ?>
+    <div class="fileText">
+        <span class="file-info"><a href="" target="_blank" download="<?php echo $post->getImage()->getData('name') ?>.<?php echo $post->getImage()->getData('filetype')?>"><?php echo $post->getImage()->getData('name') ?>.<?php echo $post->getImage()->getData('filetype')?></a> ( <?php echo $post->getImage()->getSize() ?>, <?php echo $imageData[0] ?>x<?php echo $imageData[1] ?>)</span>
+    </div>
+	<div class="post-content" id="post-content_<?php echo $post->getId() ?>">
+		<div class="post-header">
+			<span class="subject"><?php echo $post->getSubject() ?></span>
+			<span class="name"><?php echo $post->getName() ?></span>
+			<span class="date"><?php echo $post->getDate() ?></span>
+			<span class="id">No.<?php echo $post->getID() ?></span>
 		</div>
 		<div class="text">
-			<?php echo $post->getContent() ?>
+			<p><?php echo htmlentities($post->getContent()) ?></p>
 		</div>
 	</div>
-	<div class="img" id="img_<?php echo $post->getId() ?>">
+	<div class="img-post" id="img-<?php echo $post->getId() ?>-post">
 		<?php echo $this->getImage() ?>
 	</div>
 </div>

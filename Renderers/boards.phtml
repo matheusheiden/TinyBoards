@@ -13,7 +13,7 @@
 	 */
 	foreach ($boards as $key ) {
 		?>
-		<li><a href="<?php echo \TinyBoard\TinyBoard::getUrl("board/view")?>"><?php echo $key->getData('description') ?></a></li>
+		<li><a href="<?php echo \TinyBoard\TinyBoard::getUrl("board/view/".$key->getData('name'))?>"><?php echo $key->getData('description') ?></a></li>
 		<?php
 	}
 ?>

@@ -3,7 +3,7 @@ namespace TinyBoard\Blocks;
 
 use TinyBoard\Objects\Renderer as Renderer;
 
-class Blocks_Post extends Renderer {
+class Post extends Renderer {
 	/**
 	 * Name of current block
 	 * @var string
@@ -14,19 +14,13 @@ class Blocks_Post extends Renderer {
 	 */
 	private $_post;
 
-	public function __construct($post=null) {
-		parent::__construct();
-		if ($post != null)
-			$this->setPost($post);
-	}
-
 	public function getReplies() : array {
 		return $this->_post->getPostsFromThread();
 	}
 
 	public function getImage()
 	{
-		return '<img src="data:image/' . $this->_post->getImage()->getData('filetype') . ';base64,' . (string)$this->_post->getImage() . '" />';
+		return '<img src="data:image/' . $this->_post->getImage()->getData('filetype') . ';base64,' . (string)$this->_post->getImage() . '" height="'.$this->getImageAdjustedHeight().'" width="'.$this->getImageAdjustedWidth().'" />';
 	}
 
 	public function getPost(){
@@ -37,5 +31,17 @@ class Blocks_Post extends Renderer {
 	{
 		$this->_post = $post;
 		return $this;
+	}
+	public function getImageAdjustedHeight() {
+		$resInfo = $this->getPost()->getImage()->getResolution();
+		$ratio = $resInfo[0] / $resInfo[1];
+		print_r($ratio);
+		return $resInfo[0] / $ratio;
+	}
+	public function getImageAdjustedWidth() {
+		$resInfo = $this->getPost()->getImage()->getResolution();
+		$ratio = $resInfo[0] / $resInfo[1];
+		return $resInfo[1] * $ratio;
+
 	}
 }
